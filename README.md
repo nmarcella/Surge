@@ -16,8 +16,6 @@ This repository contains code for training a neural network model to predict Ext
   - [Euclidean Distance Plot](#euclidean-distance-plot)
   - [Histogram of Euclidean Distances](#histogram-of-euclidean-distances)
   - [Best and Worst Predictions](#best-and-worst-predictions)
-- [Usage](#usage)
-- [Conclusion](#conclusion)
 
 ## Introduction
 
@@ -164,3 +162,12 @@ We plot the Euclidean distances for both training and test data:
 
 ![image](images/validation.png)
 ![image](images/distro_agreement.png)
+
+## Best and Worst Predictions
+We identify the 10 best and 10 worst predictions based on the MSE and visualize them:
+![image](images/best_1.png)
+![image](images/best_2.png)
+![image](images/best_3.png)
+![image](images/bad_1.png)
+![image](images/bad_2.png)
+![image](images/bad_3.png)
