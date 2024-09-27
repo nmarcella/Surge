@@ -19,7 +19,7 @@ This repository contains code for training a neural network model to predict Ext
 
 ## Introduction
 
-This project aims to build a neural network that can predict EXAFS spectra from RDF data. The EXAFS technique is widely used to determine the local structural information of materials, and being able to predict EXAFS from RDF can significantly accelerate material analysis.
+This project aims to build a neural network that can be a "surrogate" for EXAFS calculations, or in other words, predict the structure-spectrum relationship instead of using ab initio scattering codes like FEFF. The EXAFS technique is widely used to determine the local structural information of materials, and being able to quickly predict EXAFS for a given structure can significantly accelerate material analysis.
 
 The model utilizes convolutional neural networks (CNNs) to capture spatial hierarchies in the RDF data and fully connected layers to map the extracted features to the EXAFS outputs.
 
