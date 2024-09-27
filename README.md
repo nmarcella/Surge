@@ -40,11 +40,11 @@ The dataset consists of RDF and EXAFS examples stored in NumPy arrays:
 ```python
 rdf_examples = rdf_array
 exafs_examples = chi_array
-
+```
 We split the data into training and testing sets:
 ```python
 from sklearn.model_selection import train_test_split
-
+```
 # Split the data
 x_train, x_test, y_train, y_test = train_test_split(
     rdf_examples, exafs_examples, test_size=0.20
@@ -91,3 +91,4 @@ class Model2(nn.Module):
 # Instantiate the model
 model_nano_Au = Model2().to(device)
 print(model_nano_Au)  # Print the model summary
+```
