@@ -45,10 +45,6 @@ We split the data into training and testing sets:
 ```python
 from sklearn.model_selection import train_test_split
 ```
-# Split the data
-x_train, x_test, y_train, y_test = train_test_split(
-    rdf_examples, exafs_examples, test_size=0.20
-)
 
 ## Model Architecture
 The neural network model is defined using PyTorch's nn.Module. It consists of two 1D convolutional layers followed by three fully connected layers. The activation function used is hyperbolic tangent (Tanh).
@@ -92,3 +88,79 @@ class Model2(nn.Module):
 model_nano_Au = Model2().to(device)
 print(model_nano_Au)  # Print the model summary
 ```
+
+# Training Procedure
+
+We define the loss function, optimizer, and early stopping parameters:
+
+```python
+import torch.optim as optim
+
+# Define loss function and optimizer
+criterion = nn.MSELoss()
+optimizer = optim.Adam(model_nano_Au.parameters(), lr=0.0001)
+
+# Early stopping parameters
+num_epochs = 100
+patience = 10
+min_delta = 0.0000003
+best_val_loss = float('inf')
+counter = 0
+best_model_state = None
+```
+Training Loop with Early Stopping:
+```python
+# Training loop
+for epoch in range(num_epochs):
+    # Training
+    model_nano_Au.train()
+    train_loss = 0.0
+    for inputs, targets in train_loader:
+        inputs = inputs.to(device)
+        targets = targets.to(device)
+
+        optimizer.zero_grad()
+        outputs = model_nano_Au(inputs)
+        loss = criterion(outputs, targets)
+        loss.backward()
+        optimizer.step()
+        train_loss += loss.item() * inputs.size(0)
+    train_loss /= len(train_loader.dataset)
+
+    # Validation
+    model_nano_Au.eval()
+    val_loss = 0.0
+    with torch.no_grad():
+        for inputs, targets in test_loader:
+            inputs = inputs.to(device)
+            targets = targets.to(device)
+
+            outputs = model_nano_Au(inputs)
+            loss = criterion(outputs, targets)
+            val_loss += loss.item() * inputs.size(0)
+    val_loss /= len(test_loader.dataset)
+
+    print(
+        f'Epoch [{epoch+1}/{num_epochs}], Train Loss: {train_loss:.8f}, Val Loss: {val_loss:.8f}'
+    )
+
+    # Early stopping check
+    if val_loss + min_delta < best_val_loss:
+        best_val_loss = val_loss
+        counter = 0
+        best_model_state = model_nano_Au.state_dict()
+    else:
+        counter += 1
+        if counter >= patience:
+            print('Early stopping triggered')
+            model_nano_Au.load_state_dict(best_model_state)
+            break
+```
+# Evaluation and Results
+After training, we evaluate the model's performance on both the training and testing datasets. We compute the Euclidean distance and Mean Squared Error (MSE) between the predicted and true values for each sample.
+
+## Euclidean Distance Plot
+We plot the Euclidean distances for both training and test data:
+
+![image](images/validation.png)
+![image](images/distro_agreement.png)
